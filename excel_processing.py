@@ -1,47 +1,37 @@
 import os
 import traceback
+from tkinter import messagebox
 
+from count_result import count_result
 import pandas as pd
 from tkinter.messagebox import showinfo, showerror
 
 
-def process_excel(input_file):
+def process_excel(input_files):
     try:
-        df = pd.read_excel(input_file, sheet_name=0, engine='openpyxl')
+        all_results = pd.DataFrame()
+        output_dir = os.path.dirname(input_files[0])
 
-        output_dir = os.path.dirname(input_file)
-        input_filename = os.path.basename(input_file)
+        for input_file in input_files:
+            df = pd.read_excel(input_file, sheet_name=0, engine='openpyxl')
 
-        result_list = []
+            input_filename = os.path.basename(input_file)
 
-        if '测试结果' in df.columns:
-            value_counts = df['测试结果'].value_counts()
-            total_count = len(df['测试结果'])
-            percentages = value_counts / total_count * 100
+            result_df = count_result(df, input_filename)
 
-            result_list.append(pd.DataFrame({
-                '测试用例': input_filename,
-                '结果': value_counts.index,
-                '出现次数': value_counts.values,
-                '占比率': percentages.values
-            }))
-        else:
-            result_list.append(pd.DataFrame({
-                '测试用例': input_filename,
-                '结果': ['不存在结果栏'],
-                '出现次数': [None],
-                '占比率': [None]
-            }))
+            all_results = pd.concat([result_df, all_results])
 
-        result_df = pd.concat(result_list, ignore_index=True)
+        output_file = os.path.join(output_dir, '所有测试结果统计.xlsx')
 
-        output_file = os.path.join(output_dir, '测试结果统计.xlsx')
+        all_results.to_excel(output_file, index=False)
 
-        result_df.to_excel(output_file, index=False)
+        print(all_results.to_string(index=False, justify='left', max_colwidth=10))
 
-        print(result_df.to_string(index=False, justify='left', max_colwidth=10))
-
-        showinfo("完成", "统计结果已保存到文件：" + output_file)
+        showinfo("完成", "所有统计结果已保存到文件：" + output_file)
+        # 显示提示框询问是否打开新表格的位置
+        if messagebox.askyesno("完成", "是否打开统计文件目录？"):
+            # 使用webbrowser打开文件位置
+            os.startfile(output_dir)
 
     except Exception as e:
         traceback.print_exc()
