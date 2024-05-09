@@ -28,9 +28,9 @@ def process_excel(input_files):
 
         if check_output_file(output_file):
             print("可以继续操作。")
-            # 在这里执行你的代码
         else:
             print("操作被取消。")
+            sys.exit("用户取消")
 
         all_results.to_excel(output_file, index=False)
 
@@ -50,7 +50,6 @@ def process_excel(input_files):
 def check_output_file(output_file):
     output_file = os.path.abspath(output_file)
 
-    # 检查文件是否存在
     if os.path.exists(output_file):
         response = messagebox.askyesno(
             "文件已存在",
@@ -59,11 +58,11 @@ def check_output_file(output_file):
         if not response:
             return False
 
-    # 检查文件是否被Excel使用
     def is_file_in_use_by_excel(file_path):
         for proc in psutil.process_iter(['pid', 'name', 'exe']):
             try:
-                if 'EXCEL' in proc.info['name']:
+                # if 'EXCEL' in proc.info['name']:
+                if 'EXCEL' in proc.name():
                     for open_file in proc.open_files():
                         normalized_path = os.path.normpath(open_file.path)
                         if normalized_path == file_path:
@@ -72,7 +71,6 @@ def check_output_file(output_file):
                 continue
         return False
 
-    # 主要的文件检查循环
     while True:
         if is_file_in_use_by_excel(output_file):
             continue_response = messagebox.askyesno(
@@ -82,8 +80,6 @@ def check_output_file(output_file):
             if not continue_response:
                 return False
         else:
-            # 文件不再被Excel使用，或用户选择不再继续检查
             break
 
-    # 如果文件不存在且没有被Excel使用，或用户确认覆盖/继续使用，返回True
     return True

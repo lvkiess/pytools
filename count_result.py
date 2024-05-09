@@ -9,7 +9,6 @@ def count_result(df, input_filename):
         total_count = len(df['测试结果'])
         percentages = value_counts / total_count * 100
 
-        # Ensure all lists are the same length by padding with None or pd.NA
         max_length = max(len(value_counts.index), len(value_counts.values), len(percentages.values))
         result_indices = value_counts.index.tolist() + [None] * (max_length - len(value_counts.index))
         result_counts = value_counts.values.tolist() + [None] * (max_length - len(value_counts.values))

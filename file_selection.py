@@ -4,8 +4,8 @@ from tkinter.messagebox import showerror
 
 def select_file():
     root = Tk()
-    root.geometry("1x1")  # 设置窗口大小为1x1像素，这样它只会在任务栏上显示一个图标
-    root.attributes('-alpha', 0.1)  # 设置窗口透明度，使其几乎不可见
+    root.geometry("1x1")
+    root.attributes('-alpha', 0.1)
 
     try:
         file_paths = filedialog.askopenfilenames(
