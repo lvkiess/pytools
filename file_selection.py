@@ -1,5 +1,5 @@
 from tkinter import filedialog, Tk
-from tkinter.messagebox import showinfo, showerror
+from tkinter.messagebox import showerror
 
 
 def select_file():

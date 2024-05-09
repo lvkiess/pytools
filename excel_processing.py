@@ -1,10 +1,13 @@
 import os
+import sys
 import traceback
+import psutil
 from tkinter import messagebox
+from tkinter.messagebox import showinfo, showerror
 
+from adjust_excel import adjust_excel_column_width
 from count_result import count_result
 import pandas as pd
-from tkinter.messagebox import showinfo, showerror
 
 
 def process_excel(input_files):
@@ -23,16 +26,64 @@ def process_excel(input_files):
 
         output_file = os.path.join(output_dir, '所有测试结果统计.xlsx')
 
+        if check_output_file(output_file):
+            print("可以继续操作。")
+            # 在这里执行你的代码
+        else:
+            print("操作被取消。")
+
         all_results.to_excel(output_file, index=False)
 
-        print(all_results.to_string(index=False, justify='left', max_colwidth=10))
+        print(all_results.to_string(index=False, justify='left', max_colwidth=25))
+
+        adjust_excel_column_width(output_file, 25, '测试用例')
 
         showinfo("完成", "所有统计结果已保存到文件：" + output_file)
-        # 显示提示框询问是否打开新表格的位置
         if messagebox.askyesno("完成", "是否打开统计文件目录？"):
-            # 使用webbrowser打开文件位置
             os.startfile(output_dir)
 
     except Exception as e:
         traceback.print_exc()
         showerror("错误", "处理Excel文件时发生错误：" + str(e))
+
+
+def check_output_file(output_file):
+    output_file = os.path.abspath(output_file)
+
+    # 检查文件是否存在
+    if os.path.exists(output_file):
+        response = messagebox.askyesno(
+            "文件已存在",
+            f"输出文件 '{output_file}' 已存在。继续执行将覆盖该文件。是否继续？"
+        )
+        if not response:
+            return False
+
+    # 检查文件是否被Excel使用
+    def is_file_in_use_by_excel(file_path):
+        for proc in psutil.process_iter(['pid', 'name', 'exe']):
+            try:
+                if 'EXCEL' in proc.info['name']:
+                    for open_file in proc.open_files():
+                        normalized_path = os.path.normpath(open_file.path)
+                        if normalized_path == file_path:
+                            return True
+            except (psutil.NoSuchProcess, psutil.AccessDenied, OSError):
+                continue
+        return False
+
+    # 主要的文件检查循环
+    while True:
+        if is_file_in_use_by_excel(output_file):
+            continue_response = messagebox.askyesno(
+                "文件正在被使用",
+                f"文件 '{output_file}' 正在被Excel使用。请手动关闭该文件后重试。是否尝试继续检查？"
+            )
+            if not continue_response:
+                return False
+        else:
+            # 文件不再被Excel使用，或用户选择不再继续检查
+            break
+
+    # 如果文件不存在且没有被Excel使用，或用户确认覆盖/继续使用，返回True
+    return True
