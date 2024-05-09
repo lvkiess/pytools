@@ -1,0 +1,29 @@
+name: Build Windows Executable
+on:
+  push:
+    branches: [ master ]  # 你可以指定其他分支
+jobs:
+  build:
+    runs-on: windows-latest  # 使用Windows操作系统
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # 检出代码
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.1  # 使用你项目所需的Python版本
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Build the project
+        run: pyinstaller --onefile main.py  # 使用你的主脚本名替换your_script_name.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: count_test_result  # 你可以自定义名称
+          path: dist/count_test_result.exe  # PyInstaller默认在dist目录下生成exe文件
