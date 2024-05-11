@@ -1,15 +1,19 @@
-from tkinter.messagebox import showinfo
-from file_selection import select_file
-from excel_processing import process_excel
+from tkinter import Tk, Button, Label
+
+from file_selection import select_directory, select_multiple_files
 
 
 def main():
-    input_files = select_file()
+    root = Tk()
+    root.title("测试结果统计")
 
-    if input_files:
-        process_excel(input_files)
-    else:
-        showinfo("取消", "未选择文件，操作已取消。")
+    # 创建并放置按钮
+    Label(root, text="请选择操作方式:").pack(pady=10)
+    Button(root, text="打开目录中的所有表格", command=select_directory).pack(pady=5)
+    Button(root, text="打开多个表格", command=select_multiple_files).pack(pady=5)
+
+    # 运行Tkinter事件循环
+    root.mainloop()
 
 
 if __name__ == "__main__":
