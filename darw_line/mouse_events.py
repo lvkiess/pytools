@@ -22,23 +22,34 @@ def connect_mouse_events(fig, ax, enable_zoom=True, enable_pan=True, background=
 
     def on_motion(event):
         global press, is_dragging
-        if event.button == 1 and is_dragging and press is not None:  # 检查 press 是否为 None
-            dx = event.xdata - press[0]
-            dy = event.ydata - press[1]
-            ax.set_xlim(ax.get_xlim() - dx)
-            ax.set_ylim(ax.get_ylim() - dy)
+        if event.inaxes is None:  # 确保事件在绘图区域内
+            return
+        if event.button == 1 and is_dragging:  # 鼠标左键按下并拖动
+            if press is None:  # 如果 press 是 None，则设置初始坐标
+                press = (event.xdata, event.ydata)
+            else:
+                dx = event.xdata - press[0]
+                dy = event.ydata - press[1]
 
-            # 使用 blit 更新背景
-            fig.canvas.restore_region(background)
-            ax.draw_artist(ax.patch)
-            ax.draw_artist(ax.xaxis)
-            ax.draw_artist(ax.yaxis)
-            for artist in ax.get_children():
-                if isinstance(artist, plt.Line2D):
-                    ax.draw_artist(artist)
-            fig.canvas.blit(ax.bbox)
+                # 更新图形的 x 和 y 限制
+                xlim = ax.get_xlim()
+                ylim = ax.get_ylim()
+                ax.set_xlim(xlim[0] - dx, xlim[1] - dx)
+                ax.set_ylim(ylim[0] - dy, ylim[1] - dy)
 
-            press = (event.xdata, event.ydata)
+                # 使用 blit 更新背景
+                fig.canvas.restore_region(background)
+
+                # 重绘所有的艺术家
+                ax.draw_artist(ax.patch)
+                ax.draw_artist(ax.xaxis)
+                ax.draw_artist(ax.yaxis)
+                for artist in ax.get_children():
+                    if isinstance(artist, plt.Line2D):
+                        ax.draw_artist(artist)
+
+                # 更新 blit 区域
+                fig.canvas.blit(ax.bbox)
 
     def on_scroll(event):
         factor = 0.9 if event.button == 'up' else 1.1

@@ -1,0 +1,45 @@
+﻿{
+  "Actions":
+  [
+    [
+      [
+        {"method": "TeleportTo", "params": ["(X=-37033.41,Y=181883.98,Z=1803.36)"], "duration": 10}
+      ],
+      [
+        {"method": "DriveTo", "params":
+          [
+            "(X=-61196.12,Y=168209.55,Z=2346.66)"
+          ],"duration": 999999},
+        {"method": "AddItem", "params":  ["Currency_Illegal", "1"], "duration": 1},
+        10
+      ],
+      [
+        {"method": "Jump", "params": [], "duration": 5},
+        999
+      ]
+    ],
+    [
+      {"method": "SetupRacing","params": ["Muscle0001"],"duration": 999}
+    ],
+    [
+        {"method": "TeleportTo", "params": ["(X=-29805.17,Y=208181.44,Z=1561.72)"], "duration": 10},
+        {"method": "SetHealth", "params": ["1000000000"], "duration": 1},
+        {"method":"SetDriveSpeed","params":[1800],"duration": 1}
+    ],
+    [
+        {"method": "GetInVehicle", "params": [], "duration": 5}
+    ],
+    [
+        {"method": "TeleportTo", "params": ["(X=-29805.17,Y=208181.44,Z=1561.72)"], "duration": 10}
+    ],
+    [
+        {"method": "TeleportTo", "params": ["(X=-29805.17,Y=208181.44,Z=1561.72)"], "duration": 10}
+    ],
+    [
+        {"method": "AutoFight", "params": [], "duration": 10}
+    ],
+    [
+        {"method": "TeleportTo", "params": ["(X=-29805.17,Y=208181.44,Z=1561.72)"], "duration": 10}
+    ]
+  ]
+}
