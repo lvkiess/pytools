@@ -9,7 +9,6 @@ file_paths = [
     "D:\\npc_impact.xlsx",
     "D:\\npc_base.xlsx",
 ]
-loaded_files = []
 loaded_file_options = []
 
 for file_path in file_paths:
