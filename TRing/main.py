@@ -1,24 +1,14 @@
 import streamlit as st
-from load_data import load_and_display_data
+from load_data import load_data_and_add_to_options
 from search import search_data
-import os
-
-
-def load_data_and_add_to_options(file_path):
-    file_name = os.path.basename(file_path)  # 提取文件名
-    file_name_without_ext = os.path.splitext(file_name)[0]  # 移除后缀
-    data, stname = load_and_display_data(file_path)
-    if data is not None:
-        return (file_path, file_name_without_ext)
-    return None
-
 
 st.title("表格数据搜索")
 
 file_paths = [
     "D:\\npc_dmg_type.xlsx",
     "D:\\npc_impact.xlsx",
-]  # 这里可以添加更多的文件路径
+    "D:\\npc_base.xlsx",
+]
 loaded_files = []
 loaded_file_options = []
 
