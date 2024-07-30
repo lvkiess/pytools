@@ -1,5 +1,4 @@
 import os
-
 import streamlit as st
 from load_data import load_data_and_add_to_options
 from search import search_data
@@ -7,7 +6,7 @@ from search import search_data
 
 def load_file_paths_from_config(config_path):
     try:
-        with open(config_path, "r") as file:
+        with open(config_path, "r", encoding='utf-8') as file:
             lines = file.readlines()
     except FileNotFoundError as e:
         print(f"Error: {e}")
@@ -16,13 +15,13 @@ def load_file_paths_from_config(config_path):
 
     file_paths = []
     for line in lines:
-        path, index_str = line.strip().split()  # 确保这里使用正确的分隔符
-        index = int(index_str)  # 确保索引转换为整数
+        path, index_str = line.strip().split()
+        index = int(index_str)
         file_paths.append([path, index])
     return file_paths
 
 
-config_path = os.path.abspath(".\\TRing\\config.txt")
+config_path = os.path.abspath(".\\config.txt")
 
 file_paths = load_file_paths_from_config(config_path)
 # file_paths = [
