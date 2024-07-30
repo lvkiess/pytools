@@ -21,7 +21,7 @@ def load_file_paths_from_config(config_path):
     return file_paths
 
 
-config_path = os.path.abspath(".\\config.txt")
+config_path = os.path.abspath("config.txt")
 
 file_paths = load_file_paths_from_config(config_path)
 # file_paths = [
