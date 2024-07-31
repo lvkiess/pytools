@@ -47,6 +47,6 @@ selected_files = st.multiselect(
 search_text = st.text_input("请输入搜索词，直接点搜索会显示所有加载表格内容")
 
 if st.button("搜索"):
-    search_data(search_text, loaded_file_options)
+    search_data(search_text, loaded_file_options, selected_files)
 else:
     st.write("请输入搜索词并点击搜索按钮。")
